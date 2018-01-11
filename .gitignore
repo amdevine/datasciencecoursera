@@ -1,1 +1,6 @@
 *.png
+.Rproj.user
+*.Rproj
+.Rhistory
+hw1_data.csv
+
