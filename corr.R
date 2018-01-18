@@ -7,20 +7,17 @@ corr <- function(directory, threshold = 0) {
     ## Generate list of files
     datafiles <- list.files(directory, full.names = TRUE)[ids_above_threshold]
     
-    ## Generate data frame from files
-    pollutants <- read.csv(datafiles[1])
-    for(i in datafiles[-1]) {
-        df <- read.csv(i)
-        pollutants <- rbind(pollutants, df)
-    }
-    pollutants <- pollutants[complete.cases(pollutants), ]
+    ## Create results numeric vector
+    corrs <- numeric()
     
-    ## Find correlation between nitrate (x) and sulfate (y)
-    correlations <- aggregate.data.frame(
-        pollutants, 
-        by = list(station = pollutants$ID, correlation = c(pollutants$nitrate, pollutants$sulfate)),
-        FUN = cor
-    )
-    correlations    
+    ## Generate data frame from files
+    for(i in datafiles) {
+        df <- read.csv(i)
+        correlation <- cor(df$nitrate, df$sulfate, use = "complete.obs")
+        corrs <- c(corrs, correlation)
+    }
+    
+    ## Return result vector
+    corrs
     
 }
